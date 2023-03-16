@@ -5,7 +5,7 @@ const sharedJSON = require("./shared-dependencies.json");
 const CURRENT_DIRECTORY = path.join(__dirname, '..');
 const SCOPE_DIRECTORY = process.env.CURRENT_SCOPE;
 
-async function main() {
+function main() {
   console.log("\x1b[33m", "*******************************************");
   console.log("\x1b[33m", "Bundling Shared Dependencies");
   console.log("\x1b[33m", "*******************************************");
@@ -14,7 +14,6 @@ async function main() {
 
   if ((dependencies && dependencies.length > 0) || !SCOPE_DIRECTORY) {
     try {
-      await Promise.all(
         dependencies.map(
           (dependencyFolder) =>
             new Promise((resolve, reject) => {
@@ -42,7 +41,6 @@ async function main() {
               );
             })
         )
-      );
     } catch (error) {
       console.log(
         "\x1b[31m",
