@@ -8,7 +8,7 @@ FROM eclipse-temurin:17-jre-alpine
 
 COPY --from=jdk-image /jcmd /jcmd
 
-LABEL maintainer="tech@appsmith.com"
+LABEL maintainer="admin@localhost"
 
 VOLUME /tmp
 

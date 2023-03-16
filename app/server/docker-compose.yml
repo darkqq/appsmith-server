@@ -3,7 +3,8 @@ version: "3.7"
 services:
   appsmith-internal-server:
     container_name: appsmith-server
-
+    build:
+      dockerfile: ./Dockerfile
     env_file: envs/docker.env
     environment:
       APPSMITH_REDIS_URL: "redis://redis:6379"

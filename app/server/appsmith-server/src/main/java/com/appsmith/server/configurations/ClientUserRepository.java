@@ -15,6 +15,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,6 +51,11 @@ public class ClientUserRepository implements ServerOAuth2AuthorizedClientReposit
     UserService userService;
 
     CommonConfig commonConfig;
+
+    @PostConstruct
+    public void init(){
+        System.out.println("***************************TEST APP STARTED**********************");
+    }
 
     public ClientUserRepository(UserService userService, CommonConfig commonConfig) {
         this.userService = userService;
