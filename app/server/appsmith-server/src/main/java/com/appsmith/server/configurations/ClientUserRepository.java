@@ -15,7 +15,6 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,11 +51,6 @@ public class ClientUserRepository implements ServerOAuth2AuthorizedClientReposit
 
     CommonConfig commonConfig;
 
-    @PostConstruct
-    public void init(){
-        System.out.println("***************************TEST APP STARTED**********************");
-    }
-
     public ClientUserRepository(UserService userService, CommonConfig commonConfig) {
         this.userService = userService;
         this.commonConfig = commonConfig;
@@ -84,7 +78,7 @@ public class ClientUserRepository implements ServerOAuth2AuthorizedClientReposit
         // This is to provide more control over which accounts can be used to access the application.
         // TODO: This is not a good way to do this. Ideally, we should pass "hd=example.com" to OAuth2 provider to list relevant accounts only
         if (!commonConfig.getOauthAllowedDomains().isEmpty()) {
-            String domain = null;
+            String domain;
             log.debug("Got the principal class as: {}", principal.getPrincipal().getClass().getName());
             if (principal.getPrincipal() instanceof DefaultOidcUser) {
                 DefaultOidcUser userPrincipal = (DefaultOidcUser) principal.getPrincipal();

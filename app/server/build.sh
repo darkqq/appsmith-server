@@ -55,8 +55,8 @@ fi
 # Create the dist directory
 mkdir -p dist/plugins
 
-# Copy the server jar
+printf 'Copying server jar'
 cp -v ./appsmith-server/target/server-*.jar dist/
 
-# Copy all the plugins
+printf 'Copying plugins jars'
 rsync -av --exclude "original-*.jar" ./appsmith-plugins/*/target/*.jar dist/plugins/
