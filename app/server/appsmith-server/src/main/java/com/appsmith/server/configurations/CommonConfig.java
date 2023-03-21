@@ -36,6 +36,10 @@ public class CommonConfig {
     @Value("${appsmith.instance.name:}")
     private String instanceName;
 
+
+    @Value("${appsmith.rts.base.url}")
+    private String rtsBaseUrl;
+
     @Setter(AccessLevel.NONE)
     private boolean isSignupDisabled = false;
 
@@ -131,6 +135,6 @@ public class CommonConfig {
     }
     
     public String getRtsBaseUrl() {
-        return "http://127.0.0.1:" + rtsPort;
+        return rtsBaseUrl;
     }
 }

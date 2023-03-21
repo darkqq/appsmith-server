@@ -4,7 +4,7 @@ LABEL maintainer="tech@appsmith.com"
 
 WORKDIR /app
 
-COPY package.json dist ./
+COPY ./rts/package.json ./rts/dist ./
 
 EXPOSE 8091
 

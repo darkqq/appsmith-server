@@ -1,6 +1,14 @@
 version: "3.7"
 
 services:
+  appsmith-rts:
+    container_name: appsmith-rts
+    env_file: ./app/rts/.env
+    build:
+      context: ./app
+      dockerfile: ./rts/Dockerfile
+    networks:
+      - appsmith
   appsmith-client:
     container_name: appsmith-client
     build:
@@ -24,6 +32,7 @@ services:
     depends_on:
       - mongo
       - redis
+      - appsmith-rts
     networks:
       - appsmith
     volumes:
