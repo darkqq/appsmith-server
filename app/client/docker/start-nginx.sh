@@ -10,6 +10,11 @@ if [ -z "$APPSMITH_SERVER_PROXY_PASS" ]; then
   echo "No explicit value for APPSMITH_SERVER_PROXY_PASS, using '$APPSMITH_SERVER_PROXY_PASS'."
 fi
 
+if [ -z "$APPSMITH_RTS_PROXY_PASS" ]; then
+  export APPSMITH_SERVER_PROXY_PASS='http://appsmith-rts:8091'
+  echo "No explicit value for APPSMITH_SERVER_PROXY_PASS, using '$APPSMITH_RTS_PROXY_PASS'."
+fi
+
 cp /nginx-root.conf.template /etc/nginx/nginx.conf
 
 if [ -f /nginx.conf.template ]; then
