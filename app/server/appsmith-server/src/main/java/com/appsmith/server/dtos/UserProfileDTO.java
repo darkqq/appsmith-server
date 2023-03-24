@@ -20,6 +20,8 @@ public class UserProfileDTO {
 
     String gender;
 
+    Set<String> clientRoles;
+
     @JsonProperty(value = "isAnonymous")
     boolean isAnonymous;
 
@@ -58,5 +60,6 @@ public class UserProfileDTO {
     public boolean isCredentialsNonExpired() {
         return this.isEnabled;
     }
+
 
 }

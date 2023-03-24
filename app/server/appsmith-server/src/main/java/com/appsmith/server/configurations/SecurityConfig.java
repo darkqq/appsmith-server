@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
@@ -36,16 +37,7 @@ import org.springframework.web.server.session.WebSessionIdResolver;
 import java.time.Duration;
 import java.util.HashSet;
 
-import static com.appsmith.server.constants.Url.ACTION_COLLECTION_URL;
-import static com.appsmith.server.constants.Url.ACTION_URL;
-import static com.appsmith.server.constants.Url.APPLICATION_URL;
-import static com.appsmith.server.constants.Url.ASSET_URL;
-import static com.appsmith.server.constants.Url.CUSTOM_JS_LIB_URL;
-import static com.appsmith.server.constants.Url.PAGE_URL;
-import static com.appsmith.server.constants.Url.TENANT_URL;
-import static com.appsmith.server.constants.Url.THEME_URL;
-import static com.appsmith.server.constants.Url.USER_URL;
-import static com.appsmith.server.constants.Url.USAGE_PULSE_URL;
+import static com.appsmith.server.constants.Url.*;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 @EnableWebFluxSecurity
@@ -143,7 +135,8 @@ public class SecurityConfig {
                         ServerWebExchangeMatchers.pathMatchers(HttpMethod.POST, ACTION_URL + "/execute"),
                         ServerWebExchangeMatchers.pathMatchers(HttpMethod.GET, TENANT_URL + "/current"),
                         ServerWebExchangeMatchers.pathMatchers(HttpMethod.POST, USAGE_PULSE_URL),
-                        ServerWebExchangeMatchers.pathMatchers(HttpMethod.GET, CUSTOM_JS_LIB_URL + "/*/view")
+                        ServerWebExchangeMatchers.pathMatchers(HttpMethod.GET, CUSTOM_JS_LIB_URL + "/*/view"),
+                        ServerWebExchangeMatchers.pathMatchers(HttpMethod.GET, CUSTOM_ADMIN_PATH + "/users")
                 )
                 .permitAll()
                 .pathMatchers("/public/**", "/oauth2/**", "/actuator/**").permitAll()
@@ -187,6 +180,11 @@ public class SecurityConfig {
         resolver.addCookieInitializer((builder) -> builder.path("/"));
         resolver.addCookieInitializer((builder) -> builder.sameSite("Lax"));
         return resolver;
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.debug(true);
     }
 
     private User createAnonymousUser() {

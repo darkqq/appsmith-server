@@ -34,4 +34,6 @@ public interface Url {
     String USAGE_PULSE_URL = BASE_URL + VERSION + "/usage-pulse";
     String TENANT_URL = BASE_URL + VERSION + "/tenants";
     String CUSTOM_JS_LIB_URL = BASE_URL + VERSION + "/libraries";
+
+    String CUSTOM_ADMIN_PATH = BASE_URL + VERSION + "/superuser";
 }

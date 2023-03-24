@@ -15,11 +15,8 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.util.StringUtils;
 
+import java.util.*;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 
 @Getter
@@ -36,6 +33,8 @@ public class User extends BaseDomain implements UserDetails, OidcUser {
 
     //TODO: This is deprecated in favour of groups
     private Set<Role> roles;
+
+    private Set<String> clientRoles = new HashSet<>();
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
@@ -149,5 +148,9 @@ public class User extends BaseDomain implements UserDetails, OidcUser {
     @JsonIgnore
     public String computeFirstName() {
         return (StringUtils.isEmpty(name) ? email : name).split("[\\s@]+", 2)[0];
+    }
+
+    public boolean hasClientRole(String role){
+        return Objects.nonNull(this.clientRoles) && this.clientRoles.contains(role);
     }
 }

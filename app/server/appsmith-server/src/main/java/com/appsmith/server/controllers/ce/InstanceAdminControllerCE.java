@@ -1,24 +1,24 @@
 package com.appsmith.server.controllers.ce;
 
 import com.appsmith.server.constants.Url;
+import com.appsmith.server.domains.User;
 import com.appsmith.server.dtos.EnvChangesResponseDTO;
 import com.appsmith.server.dtos.ResponseDTO;
 import com.appsmith.server.dtos.TestEmailConfigRequestDTO;
+import com.appsmith.server.repositories.UserRepository;
+import com.appsmith.server.services.UserService;
 import com.appsmith.server.solutions.EnvManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import jakarta.validation.Valid;
 import java.util.Map;
+import java.util.Optional;
 
 @RequestMapping(Url.INSTANCE_ADMIN_URL)
 @RequiredArgsConstructor
@@ -26,6 +26,7 @@ import java.util.Map;
 public class InstanceAdminControllerCE {
 
     private final EnvManager envManager;
+
 
     @GetMapping("/env")
     public Mono<ResponseDTO<Map<String, String>>> getAll() {
@@ -73,5 +74,6 @@ public class InstanceAdminControllerCE {
         return envManager.sendTestEmail(requestDTO)
                 .thenReturn(new ResponseDTO<>(HttpStatus.OK.value(), true, null));
     }
+
 
 }

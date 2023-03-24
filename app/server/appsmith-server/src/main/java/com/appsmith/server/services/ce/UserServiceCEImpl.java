@@ -765,6 +765,7 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
                     profile.setUseCase(userData.getUseCase());
                     profile.setPhotoId(userData.getProfilePhotoAssetId());
                     profile.setEnableTelemetry(!commonConfig.isTelemetryDisabled());
+                    profile.setClientRoles(userFromDb.getClientRoles());
 
                     profile.setSuperUser(isSuperUser);
                     profile.setConfigurable(!StringUtils.isEmpty(commonConfig.getEnvFilePath()));
