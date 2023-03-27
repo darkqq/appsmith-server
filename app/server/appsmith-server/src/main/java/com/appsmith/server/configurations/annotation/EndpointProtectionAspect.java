@@ -3,6 +3,8 @@ package com.appsmith.server.configurations.annotation;
 import com.appsmith.server.domains.User;
 import com.appsmith.server.exceptions.AppsmithError;
 import com.appsmith.server.exceptions.AppsmithException;
+import com.appsmith.server.helpers.UserUtils;
+import com.appsmith.server.helpers.ce.UserUtilsCE;
 import com.appsmith.server.repositories.UserRepository;
 import com.appsmith.server.services.SessionUserService;
 import com.appsmith.server.services.UserService;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
+import reactor.util.function.Tuple3;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Method;
@@ -34,12 +37,7 @@ import java.util.Objects;
 public class EndpointProtectionAspect {
 
     private final UserRepository userRepository;
-
-    @PostConstruct
-    public void init() {
-        System.out.println("*** ASPECT INIT ***");
-    }
-
+    private final UserUtils userUtils;
 
     @Around("@annotation(AuthorityRequired)")
     public Mono<Object> secureEndPoint(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
@@ -47,7 +45,7 @@ public class EndpointProtectionAspect {
         final Method method = signature.getMethod();
         final AuthorityRequired annotation = method.getAnnotation(AuthorityRequired.class);
 
-        Mono<Tuple2<Object, Object>> zipMono = Mono.zip(
+        Mono<Tuple3<Object, Boolean, Object>> zipMono = Mono.zip(
                 ReactiveSecurityContextHolder.getContext()
                         .map(context ->(User) context.getAuthentication().getPrincipal())
                         .flatMap(user -> userRepository.findByEmail(user.getEmail()))
@@ -61,17 +59,17 @@ public class EndpointProtectionAspect {
                             }
                             return Mono.just(new AppsmithException(AppsmithError.UNAUTHORIZED_ACCESS));
                         }),
+                    userUtils.isCurrentUserSuperUser(),
                     (Mono<Object>) proceedingJoinPoint.proceed()
         );
 
-
-        return  zipMono
+        return zipMono
                 .map(objects -> {
-                    if(objects.getT1() instanceof AppsmithException){
-                        AppsmithException ex = (AppsmithException) objects.getT1();
-                        return ResponseEntity.status(ex.getHttpStatus());
+                    if (!objects.getT2() && objects.getT1() instanceof AppsmithException) {
+                        return ResponseEntity.status(((AppsmithException) objects.getT1()).getHttpStatus());
                     }
-                    return objects.getT2();
+
+                    return objects.getT3();
                 });
     }
 }
