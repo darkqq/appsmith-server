@@ -4,6 +4,7 @@ set -o errexit
 
 cd "$(dirname "$0")"
 rm -rf dist/
+rm -rf node_modules/
 yarn install --frozen-lockfile
 npx tsc && npx tsc-alias
 tsc_exit_code=$?
