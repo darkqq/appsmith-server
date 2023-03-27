@@ -62,13 +62,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static com.appsmith.server.acl.AclPermission.MANAGE_USERS;
 import static com.appsmith.server.helpers.ValidationUtils.LOGIN_PASSWORD_MAX_LENGTH;
@@ -449,6 +443,42 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
                 });
     }
 
+
+    @Override
+    public Mono<UserSignupDTO> createCustomUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        return repository.findByCaseInsensitiveEmail(user.getUsername())
+                .flatMap(savedUser -> {
+                    if (!savedUser.isEnabled()) {
+                        // First enable the user
+                        savedUser.setIsEnabled(true);
+                        savedUser.setSource(user.getSource());
+                        // In case of form login, store the encrypted password.
+                        savedUser.setPassword(user.getPassword());
+                        return repository.save(savedUser).map(updatedUser -> {
+                            UserSignupDTO userSignupDTO = new UserSignupDTO();
+                            userSignupDTO.setUser(updatedUser);
+                            return userSignupDTO;
+                        });
+                    }
+                    return Mono.error(new AppsmithException(AppsmithError.USER_ALREADY_EXISTS_SIGNUP, savedUser.getUsername()));
+                })
+                .switchIfEmpty(Mono.defer(() -> {
+                    return signupIfAllowed(user)
+                            .flatMap(savedUser -> {
+                                final UserSignupDTO userSignupDTO = new UserSignupDTO();
+                                userSignupDTO.setUser(savedUser);
+
+                                return Mono.just(userSignupDTO);
+                            })
+                            .flatMap(userSignupDTO -> findByEmail(userSignupDTO.getUser().getEmail()).map(user1 -> {
+                                userSignupDTO.setUser(user1);
+                                return userSignupDTO;
+                            }));
+                }));
+    }
+
     /**
      * This function creates a new user in the system. Primarily used by new users signing up for the first time on the
      * platform. This flow also ensures that a default workspace name is created for the user. The new user is then
@@ -652,6 +682,8 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
                             .thenReturn(createdUser);
                 });
     }
+
+
 
     @Override
     public Flux<User> get(MultiValueMap<String, String> params) {

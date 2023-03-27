@@ -97,7 +97,11 @@ public class User extends BaseDomain implements UserDetails, OidcUser {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return Objects.nonNull(this.email) ? this.email : this.name;
+    }
+
+    public void setUsername(String username){
+        this.name = username;
     }
 
     @Override

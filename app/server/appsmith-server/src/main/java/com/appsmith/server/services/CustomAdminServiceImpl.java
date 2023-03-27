@@ -1,14 +1,19 @@
 package com.appsmith.server.services;
 
 import com.appsmith.server.domains.User;
+import com.appsmith.server.dtos.ResponseDTO;
 import com.appsmith.server.dtos.UserSignupDTO;
 import com.appsmith.server.repositories.UserRepository;
 import com.appsmith.server.repositories.ce.UserPageableRepository;
+import com.appsmith.server.services.ce.UserServiceCE;
+import com.appsmith.server.solutions.ce.UserSignupCE;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -22,6 +27,9 @@ public class CustomAdminServiceImpl implements CustomAdminService{
 
 
     private final UserPageableRepository userRepository;
+
+    private final UserSignupCE userSignupCE;
+
 
     @Override
     public List<User> getPanelUsers(Integer offset, Integer pageSize, String searchQuery) {
@@ -52,8 +60,11 @@ public class CustomAdminServiceImpl implements CustomAdminService{
         return null;
     }
 
+
+
     @Override
-    public Boolean createUser(UserSignupDTO userSignupDTO) {
+    public Boolean updateUser(User user, ServerWebExchange exchange) {
+
         return null;
     }
 }

@@ -7,6 +7,8 @@ import reactor.core.publisher.Mono;
 
 public interface UserSignupCE {
 
+    Mono<User> registerUser(User user);
+
     /**
      * This function does the sign-up flow of the given user object as a new user, and then logs that user. After the
      * login is successful, the authentication success handlers will be called directly.

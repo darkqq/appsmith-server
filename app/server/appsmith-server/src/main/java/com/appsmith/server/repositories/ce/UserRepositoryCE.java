@@ -9,12 +9,12 @@ public interface UserRepositoryCE extends BaseRepository<User, String>, CustomUs
 
     Mono<User> findByEmail(String email);
 
+    Mono<User> findByName(String name);
+
     Mono<User> findByCaseInsensitiveEmail(String email);
 
     Mono<Long> countByDeletedAtNull();
 
     Mono<User> findByEmailAndTenantId(String email, String tenantId);
-
-
 
 }

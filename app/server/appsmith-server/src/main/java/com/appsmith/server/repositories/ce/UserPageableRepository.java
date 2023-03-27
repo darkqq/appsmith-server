@@ -10,6 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserPageableRepository extends MongoRepository<User, String> {
 
-    @Query(value = "{'name': {$regex: ?0, $options: 'i'}}")
+    @Query(value = "{$or: [" +
+            "{'id': {$regex: ?0,$options: 'i'}}, " +
+            "{'email': {$regex: ?0, $options: 'i'}}, " +
+            "{'name': {$regex: ?0,$options: 'i'}}" +
+            "]}")
     Page<User> findUserBySearchCriteria(String searchQuery, Pageable pageable);
 }

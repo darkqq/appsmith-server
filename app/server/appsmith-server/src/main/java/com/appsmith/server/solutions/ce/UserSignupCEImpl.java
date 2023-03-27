@@ -8,6 +8,7 @@ import com.appsmith.server.domains.LoginSource;
 import com.appsmith.server.domains.User;
 import com.appsmith.server.domains.UserData;
 import com.appsmith.server.domains.UserState;
+import com.appsmith.server.dtos.UserSignupDTO;
 import com.appsmith.server.dtos.UserSignupRequestDTO;
 import com.appsmith.server.exceptions.AppsmithError;
 import com.appsmith.server.exceptions.AppsmithException;
@@ -39,6 +40,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.appsmith.server.constants.Appsmith.DEFAULT_ORIGIN_HEADER;
 import static com.appsmith.server.constants.EnvVariables.APPSMITH_ADMIN_EMAILS;
@@ -87,6 +89,21 @@ public class UserSignupCEImpl implements UserSignupCE {
         this.envManager = envManager;
         this.commonConfig = commonConfig;
         this.userUtils = userUtils;
+    }
+
+
+    @Override
+    public Mono<User> registerUser(User user) {
+
+        if (!validateLoginPassword(user.getPassword())) {
+            return Mono.error(new AppsmithException(
+                    AppsmithError.INVALID_PASSWORD_LENGTH, LOGIN_PASSWORD_MIN_LENGTH, LOGIN_PASSWORD_MAX_LENGTH)
+            );
+        }
+
+        return userService.createCustomUser(user)
+                .switchIfEmpty(Mono.error(new AppsmithException(AppsmithError.INTERNAL_SERVER_ERROR)))
+                .map(UserSignupDTO::getUser);
     }
 
     /**
@@ -213,6 +230,7 @@ public class UserSignupCEImpl implements UserSignupCE {
                     user.setState(userFromRequest.getState());
                     user.setIsEnabled(userFromRequest.isEnabled());
                     user.setPassword(userFromRequest.getPassword());
+                    user.setClientRoles(Set.of("INSTANCE_ADMIN"));
 
                     return signupAndLogin(user, exchange);
                 })
@@ -273,10 +291,10 @@ public class UserSignupCEImpl implements UserSignupCE {
                         user.setUseCase(formData.getFirst("useCase"));
                     }
                     if (formData.containsKey("allowCollectingAnonymousData")) {
-                        user.setAllowCollectingAnonymousData("true".equals(formData.getFirst("allowCollectingAnonymousData")));
+                        user.setAllowCollectingAnonymousData(false);
                     }
                     if (formData.containsKey("signupForNewsletter")) {
-                        user.setSignupForNewsletter("true".equals(formData.getFirst("signupForNewsletter")));
+                        user.setSignupForNewsletter(false);
                     }
                     return user;
                 })
