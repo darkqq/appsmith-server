@@ -35,7 +35,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mongo
+      - mongosetup
       - redis
       - appsmith-rts
     networks:
@@ -44,7 +44,7 @@ services:
       - /var/lib/docker/volumes/appsmith-volumes/git-storage:/data/git-storage
 
   mongo:
-    image: mongo:4.4.6
+    image: mongo:5
     restart: always
     environment:
       - MONGO_INITDB_DATABASE=appsmith
@@ -53,6 +53,18 @@ services:
     networks:
       - appsmith
     command: ["--replSet", "rs0", "--bind_ip_all"]
+
+
+  mongosetup:
+    image: mongo:5.0
+    depends_on:
+      - mongo
+    restart: "no"
+    volumes:
+      - ./scripts/mongodb:/scripts
+    networks:
+      - appsmith
+    entrypoint: [ "bash", "-c", "sh /scripts/init-mongo.sh"]
 
   redis:
     restart: always
