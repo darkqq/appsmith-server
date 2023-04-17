@@ -44,7 +44,7 @@ services:
       - /var/lib/docker/volumes/appsmith-volumes/git-storage:/data/git-storage
 
   mongo:
-    image: mongo:5
+    image: mongo:4.4.6
     restart: always
     environment:
       - MONGO_INITDB_DATABASE=appsmith
@@ -56,7 +56,7 @@ services:
 
 
   mongosetup:
-    image: mongo:5.0
+    image: mongo:4.4.6
     depends_on:
       - mongo
     restart: "no"
