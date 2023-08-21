@@ -13,7 +13,7 @@
 # Deployment
 
 ```
-cp /app/server/docker/docker.env.example /app/server/docker/docker.env
+cp ./app/server/envs/docker.env.example ./app/server/envs/docker.env
 ```
 
 ```
