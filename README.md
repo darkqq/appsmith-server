@@ -16,6 +16,11 @@
 cp ./app/server/envs/docker.env.example ./app/server/envs/docker.env
 ```
 
+
+```
+cp ./app/rts/.env.example ./app/rts/.env
+```
+
 ```
 sudo docker-compose up -d
 ```
