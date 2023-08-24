@@ -7,7 +7,7 @@ FROM eclipse-temurin:17-jdk-alpine as build
 RUN apk add --no-cache curl tar bash procps rsync
 
 
-ARG MAVEN_VERSION=3.6.3
+ARG MAVEN_VERSION=3.9.4
 
 ARG USER_HOME_DIR="/root"
 
