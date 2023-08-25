@@ -25,10 +25,12 @@ describe("<CodeEditor /> - Keyboard navigation", () => {
         <CodeEditor
           additionalDynamicData={{}}
           hideEvaluatedValue={false}
+          hinting={[]}
           input={{
             value: "",
             onChange: handleOnSelect,
           }}
+          marking={[]}
           mode={EditorModes.TEXT}
           size={EditorSize.COMPACT}
           tabBehaviour={TabBehaviour.INDENT}

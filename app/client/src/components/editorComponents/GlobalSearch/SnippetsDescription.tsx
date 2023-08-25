@@ -349,11 +349,13 @@ export default function SnippetDescription({ item }: { item: Snippet }) {
                   errors={evaluatedArguments[arg.name]?.errors}
                   evaluatedValue={evaluatedArguments[arg.name]?.value}
                   expected={getExpectedValue({ type: arg.type })}
+                  hinting={[]}
                   input={{
                     value: selectedArgs[arg.name],
                     onChange: (value: any) => handleArgChange(value, arg),
                   }}
                   isInvalid={evaluatedArguments[arg.name]?.isInvalid}
+                  marking={[]}
                   mode={EditorModes.TEXT_WITH_BINDING}
                   popperPlacement="right-start"
                   popperZIndex={Layers.portals}

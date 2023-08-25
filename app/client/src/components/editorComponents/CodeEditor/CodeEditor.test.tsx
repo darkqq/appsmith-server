@@ -23,12 +23,14 @@ describe("CodeEditor", () => {
           <CodeEditor
             additionalDynamicData={{}}
             hideEvaluatedValue={false}
+            hinting={[]}
             input={{
               value: "",
               onChange: () => {
                 //
               },
             }}
+            marking={[]}
             mode={EditorModes.TEXT}
             size={EditorSize.COMPACT}
             tabBehaviour={TabBehaviour.INDENT}
@@ -51,12 +53,14 @@ describe("CodeEditor", () => {
           <CodeEditor
             additionalDynamicData={{}}
             hideEvaluatedValue
+            hinting={[]}
             input={{
               value: "",
               onChange: () => {
                 //
               },
             }}
+            marking={[]}
             mode={EditorModes.TEXT}
             size={EditorSize.COMPACT}
             tabBehaviour={TabBehaviour.INDENT}
